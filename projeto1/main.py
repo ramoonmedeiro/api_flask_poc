@@ -1,5 +1,7 @@
 from fastapi import FastAPI, HTTPException, status
 import uvicorn
+from models import Filme
+
 
 # iniciando app
 app = FastAPI()
@@ -34,6 +36,16 @@ async def get_filme(filme_id: int):
                 status_code=status.HTTP_404_NOT_FOUND, 
                 detail='Filme não encontrado'
                 )
+    
+
+@app.post('/filmes')
+async def post_filme(filme: Filme):
+    next_id: int = len(filmes) + 1
+    filmes[next_id] = filme
+    del filme.id
+    return filme
+
+
 
 if __name__ == '__main__':
     uvicorn.run('main:app', host='0.0.0.0', port=8000, reload=True)
