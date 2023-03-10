@@ -46,6 +46,16 @@ async def post_filme(filme: Filme):
     return filme
 
 
+@app.put('/filmes/{filme_id}')
+async def put_filme(filme_id: int, filme: Filme):
+    if filme_id in filmes:
+        filmes[filme_id] = filme
+
+        return filme
+    else:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'Não exite um filme com id={filme_id}')
+
+
 
 if __name__ == '__main__':
     uvicorn.run('main:app', host='0.0.0.0', port=8000, reload=True)
