@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, status
 import uvicorn
 
 # iniciando app
@@ -18,5 +18,22 @@ filmes = {
     }
 }
 
+# Criando rota=filmes
+@app.get('/filmes')
+async def get_filmes():
+    return filmes
+
+# Dando get para consumir o endpoint de um filme
+@app.get('/filmes/{filme_id}')
+async def get_filme(filme_id: int):
+    try:    
+        filme = filmes[filme_id]
+        return filme
+    except:
+        raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, 
+                detail='Filme não encontrado'
+                )
+
 if __name__ == '__main__':
-    uvicorn.run('main:app', host='0.0.0.0', port=8000, debug=True)
+    uvicorn.run('main:app', host='0.0.0.0', port=8000, reload=True)
