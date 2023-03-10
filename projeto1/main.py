@@ -1,4 +1,5 @@
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, status, Path
+from fastapi.responses import JSONResponse
 import uvicorn
 from models import Filme
 
@@ -20,14 +21,21 @@ filmes = {
     }
 }
 
-# Criando rota=filmes
+# Método GET
 @app.get('/filmes')
 async def get_filmes():
     return filmes
 
 # Dando get para consumir o endpoint de um filme
 @app.get('/filmes/{filme_id}')
-async def get_filme(filme_id: int):
+async def get_filme(
+    filme_id: int = Path(
+    default=None, 
+    title='ID do filme',
+    description='Dever ser entre 1 e 2',
+    gt = 0, lt = 3 )
+    ):
+
     try:    
         filme = filmes[filme_id]
         return filme
@@ -37,7 +45,7 @@ async def get_filme(filme_id: int):
                 detail='Filme não encontrado'
                 )
     
-
+# Método POST
 @app.post('/filmes', status_code=status.HTTP_201_CREATED)
 async def post_filme(filme: Filme):
     next_id: int = len(filmes) + 1
@@ -45,7 +53,7 @@ async def post_filme(filme: Filme):
     del filme.id
     return filme
 
-
+# Método PUT
 @app.put('/filmes/{filme_id}')
 async def put_filme(filme_id: int, filme: Filme):
     if filme_id in filmes:
@@ -53,7 +61,22 @@ async def put_filme(filme_id: int, filme: Filme):
 
         return filme
     else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'Não exite um filme com id={filme_id}')
+        raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, 
+                detail=f'Não exite um filme com id={filme_id}'
+                )
+
+# Método DELETE
+@app.delete('/filmes/{filme_id}')
+async def delete_filme(filme_id: int):
+    if filme_id in filmes:
+        del filmes[filme_id]
+        return JSONResponse(status_code=status.HTTP_204_NO_CONTENT)
+    else:
+        raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, 
+                detail=f'Não exite um filme com id={filme_id}'
+        )
 
 
 
