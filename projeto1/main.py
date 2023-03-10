@@ -38,7 +38,7 @@ async def get_filme(filme_id: int):
                 )
     
 
-@app.post('/filmes')
+@app.post('/filmes', status_code=status.HTTP_201_CREATED)
 async def post_filme(filme: Filme):
     next_id: int = len(filmes) + 1
     filmes[next_id] = filme
