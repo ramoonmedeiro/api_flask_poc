@@ -5,8 +5,8 @@ services:
     image: postgres:14.2-alpine
     restart: always
     environment:
-      - POSTGRES_USER: ramon
-      - POSTGRES_PASSWORD: exemplo
-      - POSTGRES_DB: db_api
+      POSTGRES_USER: ramon
+      POSTGRES_PASSWORD: exemplo
+      POSTGRES_DB: db_api
     ports:
       - "5432:5432"
