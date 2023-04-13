@@ -2,37 +2,35 @@ import requests
 import json
 
 def _get(url):
-    r = requests.get(url)
-    return json.loads(r.text)
 
-def _post(url, d):
-    r = requests.post(url, data=d)
-    return json.loads(r.text)
+    headersList = {
+    "Accept": "*/*",
+    "User-Agent": "Thunder Client (https://www.thunderclient.com)" 
+    }
 
-def _put():
-    pass
+    response = requests.request("GET", url=url, headers=headersList)
 
-def _delete(url):
-    r = requests.delete(url)
-    return json.loads(r.text)
+    return response.text
+
+def _post(url):
+
+    headersList = {
+        "Accept": "*/*",
+        "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+        "Content-Type": "application/json" 
+    }
+
+    payload = json.dumps({
+        "titulo": "O código da vinci",
+        "genero": "Suspense",
+        "ano": 2006
+        })
+
+    response = requests.request("POST", url, data=payload,  headers=headersList)
+
+    return response
 
 if __name__ == '__main__':
-    
-    id_filme = 3
-    URL =f'http://localhost:8000/filmes/{id_filme}'
-
-    # GET method
-    #print(_get(url=URL))
-
-    # POST Method
-    #d = {
-    #    'titulo': 'Código Da Vinci',
-    #    'genero': 'ação',
-    #    'ano': 2003
-    #}
-    #print(_post(url=URL, d=d))
-
-    # PUT method
-
-    # DELETE method
-    print(_delete(url=URL))
+    url = 'http://localhost:8000/filmes'
+    post = _post(url=url)
+    print(post)
